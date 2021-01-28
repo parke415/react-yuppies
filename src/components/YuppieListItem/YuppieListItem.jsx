@@ -1,9 +1,9 @@
 import './YuppieListItem.css';
 
-export default function YuppieListItem({ yuppieItem }) {
+export default function YuppieListItem({ yuppie }) {
   return (
     <div className="YuppieListItem">
-      <div className="emoji flex-ctr-ctr">{yuppieItem.name}</div>
+      <div>{yuppie.name} ({yuppie.age}), {yuppie.occupation} in {yuppie.location}</div>
     </div>
   );
 }

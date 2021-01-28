@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, NavLink, useHistory } from 'react-router-dom';
 import { getUser } from '../../utilities/users-service';
 import './App.css';
 import AuthPage from '../AuthPage/AuthPage';
-import NewOrderPage from '../NewOrderPage/NewOrderPage';
-import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage';
 import NavBar from '../../components/NavBar/NavBar';
-import * as yuppiesAPI from '../../utilities/yuppies-api'
+import * as yuppiesAPI from '../../utilities/yuppies-api';
+import YuppieList from '../../components/YuppieList/YuppieList';
+import AddYuppiePage from '../AddYuppiePage/AddYuppiePage';
 
 export default function App() {
   const [user, setUser] = useState(getUser());
   const [yuppies, setYuppies] = useState([]);
 
-  useEffect(function() {
+  const history = useHistory();
+
+  useEffect(() => {
     async function getYuppies() {
       const yuppies = await yuppiesAPI.getAll();
       setYuppies(yuppies);
@@ -20,19 +22,41 @@ export default function App() {
     getYuppies();
   }, []);
 
+  useEffect(() => {
+    history.push("/")
+  }, [yuppies, history])
+
+  async function handleAddYuppie(newYuppieData) {
+    const newYuppie = await yuppiesAPI.create(newYuppieData);
+    setYuppies([...yuppies, newYuppie]);
+  }
+
+  async function handleUpdateYuppie(updatedYuppieData) {
+    const updatedYuppie = await yuppiesAPI.update(updatedYuppieData);
+    const newYuppies = yuppies.map(yuppie => {
+      return yuppie._id === updatedYuppie._id ? updatedYuppie : yuppie
+    });
+    setYuppies(newYuppies);
+  }
+
+  async function handleDeleteYuppie(yuppieID) {
+    await yuppiesAPI.deleteOne(yuppieID);
+    setYuppies(yuppies.filter(yuppie => yuppie._id !== yuppieID));
+  }
+
   return (
     <main className="App">
       { user ?
           <>
             <NavBar user={user} setUser={setUser} />
             <Switch>
-              <Route path="/orders/new">
-                <NewOrderPage yuppies={yuppies}/>
+              <Route path="/yuppies/new">
+                <AddYuppiePage handleAddYuppie={handleAddYuppie} />
               </Route>
-              <Route path="/orders">
-                <OrderHistoryPage />
+              <Route path="/yuppies">
+                <YuppieList yuppies={yuppies} />
               </Route>
-              <Redirect to="/orders" />
+              <Redirect to="/yuppies" />
             </Switch>
           </>
         :
