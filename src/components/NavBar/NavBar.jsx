@@ -12,7 +12,7 @@ export default function NavBar({ user, setUser }) {
     <nav>
       <NavLink exact activeStyle={{backgroundColor: 'yellow'}} to="/yuppies">Yuppie List</NavLink>
       &nbsp; | &nbsp;
-      <NavLink exact activeStyle={{backgroundColor: 'yellow'}} to="/yuppies/new">Add Yuppie</NavLink>
+      <NavLink exact activeStyle={{backgroundColor: 'yellow'}} to="/new">Add Yuppie</NavLink>
       &nbsp; | &nbsp;
       <span>Welcome, {user.name}</span>
       &nbsp;&nbsp;<Link to="" onClick={handleLogOut}>Log Out</Link>

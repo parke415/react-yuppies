@@ -1,13 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
+import {Link, useLocation} from 'react-router-dom';
 
-export default function AddYuppiePage({ handleAddYuppie }) {
+export default function EditYuppiePage({ handleUpdateYuppie }) {
   const [formValidity, setFormValidity] = useState(true);
-  const [formData, setFormData] = useState({
-    name: '',
-    age: '0',
-    location: '',
-    occupation: ''
-  });
+  const [formData, setFormData] = useState(useLocation().state.yuppie);
 
   const formRef = useRef();
 
@@ -15,7 +11,7 @@ export default function AddYuppiePage({ handleAddYuppie }) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    handleAddYuppie(formData);
+    handleUpdateYuppie(formData);
   }
 
   function handleChange(evt) {
@@ -24,7 +20,7 @@ export default function AddYuppiePage({ handleAddYuppie }) {
 
   return (
     <>
-      <h1>Add Yuppie</h1>
+      <h1>Edit Yuppie</h1>
       <form ref={formRef} onSubmit={handleSubmit} autoComplete="off">
         <div className="form-group">
           <label>Name</label>
@@ -65,8 +61,9 @@ export default function AddYuppiePage({ handleAddYuppie }) {
           />
         </div>
         <button className="btn" type="submit" disabled={formValidity}>
-          ADD YUPPIE
+          UPDATE YUPPIE
         </button>
+        <Link to='/'>CANCEL UPDATE</Link>
       </form>
     </>
   );
